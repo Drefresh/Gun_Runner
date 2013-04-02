@@ -23,7 +23,15 @@
  * Use this.refreshViews() to reload the UI.
  */
 isis.Game.prototype.changeCity = function(newCity) {
-  console.log('trying to change city to ' + newCity.name);
+  console.log('trying to change city to' + newCity.name);
+  this.currentCity = newCity;
+  for (i = 0; i <newCity.items.length; i++){
+    var item = newCity.items[i];
+    item.recalculatePrice();
+    console.log(item);
+    this.refreshViews();
+  }
+    
 }
 
 /*
@@ -37,7 +45,13 @@ isis.Game.prototype.changeCity = function(newCity) {
  * Use prompt() and confirm() to get and valid user input
  */
 isis.Game.prototype.buyItem = function(item) {
-  console.log('trying to buy ' + item.name);
+  var quantity = prompt("How many do you want?");
+  if (confirm ("Are you sure?")){
+    this.agent.money -= item.currentPrice * quantity;
+    this.agent.inventory.push(item, quantity);
+
+  }
+
 }
 
 /**
@@ -55,10 +69,17 @@ isis.Game.prototype.buyItem = function(item) {
  * is trying to sell.
  */
 isis.Game.prototype.sellItem = function(inventoryItem) {
-  var value = inventoryItem.item.currentPrice * inventoryItem.quantity;
-  console.log('trying to sell ' + inventoryItem.item.name + ', I have ' + inventoryItem.quantity + ' worth $' + value);
-}
+    /* var value = inventoryItem.item.currentPrice * inventoryItem.quantity;  
 
+
+    console.log('trying to sell ' + inventoryItem.item.name + ', I have ' + inventoryItem.quantity + ' worth $' + value);
+    */
+  var quantity = prompt("How much would you like to sell?");
+  if (confirm("Are you sure?")){
+  this.agent.money += inventoryItem.item.currentPrice * quantity;
+  this.agent.inventory.pop(inventoryItem.item, quantity);
+  }
+}
 
 /*
  * This function is called when the game is initialized to produce a list of bad
@@ -80,7 +101,7 @@ isis.Game.prototype.initBadThings = function(badThings) {
     }
   });
   
-  // Fill this one in with a new bad thing which could happen!
+  // " "
   // If you want, copy and paste it to make more bad things!
   badThings.push({
     name: "Name your bad thing!",
